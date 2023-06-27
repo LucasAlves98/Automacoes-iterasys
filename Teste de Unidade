@@ -1,0 +1,40 @@
+# Funcionalidade: cálculo de média aritmética
+# Uma funcionalidade simples que recebe uma lista de números e retorna a média aritmética desses números.
+
+def calcular_media(lista_numeros):
+    if not lista_numeros:
+        return None
+    total = sum(lista_numeros)
+    return total / len(lista_numeros)
+
+# A função calcular_media recebe como argumento uma lista de números. 
+# Se a lista for vazia, a função retorna None, caso contrário, a função calcula a soma de todos os números da lista utilizando a função sum do Python e divide pelo tamanho da lista para obter a média aritmética.
+
+# Teste de unidade:
+
+# Para testar essa funcionalidade, vamos criar um teste de unidade utilizando o módulo unittest do Python. 
+# O teste deve verificar se a função calcular_media retorna a média aritmética correta para diferentes listas de números.
+
+import unittest
+
+class TestMedia(unittest.TestCase):
+    def test_media_vazia(self):
+        self.assertIsNone(calcular_media([]))
+
+    def test_media_um_elemento(self):
+        self.assertEqual(calcular_media([5]), 5)
+
+    def test_media_lista(self):
+        self.assertEqual(calcular_media([1, 2, 3, 4, 5]), 3)
+
+if __name__ == '__main__':
+    unittest.main()
+
+# O primeiro teste test_media_vazia verifica se a função retorna None para uma lista vazia. O segundo teste test_media_um_elemento verifica se a função retorna o único número da lista quando a lista tem apenas um elemento. O terceiro teste test_media_lista verifica se a função retorna a média aritmética correta para uma lista com vários números.
+
+# Ao executar esse código, a saída deve ser:
+Ran 3 tests in 0.000s
+
+OK
+
+# Resultado: Os três testes passaram e a funcionalidade está funcionando corretamente.

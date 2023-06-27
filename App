@@ -1,0 +1,59 @@
+# Para criar a automação de testes de pelo menos um fluxo mobile (app), utilizei a biblioteca Appium do Python, que permite automatizar interações com aplicativos mobile.
+# sendo fluxo de compra de um produto em um aplicativo mobile do mesmo site de comércio eletrônico que testei anteriormente. O fluxo consiste em navegar até a página do produto, adicionar o produto ao carrinho, navegar até o carrinho e finalizar a compra.
+# Para automatizar esse fluxo, utilizado um teste de unidade utilizando a biblioteca unittest do Python e a biblioteca Appium para controlar o aplicativo.
+
+import unittest
+from appium import webdriver
+from time import sleep
+
+class TestMobile(unittest.TestCase):
+    def setUp(self):
+        desired_caps = {
+            'platformName': 'Android',
+            'platformVersion': '10',
+            'deviceName': 'emulator-5554',
+            'appPackage': 'com.android.chrome',
+            'appActivity': 'com.google.android.apps.chrome.Main'
+        }
+        self.driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
+        self.driver.implicitly_wait(10)
+    
+    def test_compra_produto(self):
+        self.driver.get('https://exemplo.com/produto/123')  # altere para a URL do produto que você quer testar
+        
+        # Adicionar o produto ao carrinho
+        self.driver.find_element_by_css_selector('#add-to-cart').click()
+        sleep(3)
+        
+        # Navegar até o carrinho
+        self.driver.find_element_by_css_selector('#cart-button').click()
+        sleep(3)
+        
+        # Finalizar a compra
+        self.driver.find_element_by_css_selector('#checkout-button').click()
+        sleep(3)
+        self.driver.find_element_by_css_selector('#checkout-form input[name="nome"]').send_keys('Fulano de Tal')
+        self.driver.find_element_by_css_selector('#checkout-form input[name="email"]').send_keys('fulano@example.com')
+        self.driver.find_element_by_css_selector('#checkout-form input[name="endereco"]').send_keys('Rua Exemplo, 123')
+        self.driver.find_element_by_css_selector('#checkout-form input[name="cep"]').send_keys('12345-678')
+        self.driver.find_element_by_css_selector('#checkout-form input[name="pagamento"]').click()
+        self.driver.find_element_by_css_selector('#checkout-form input[type="submit"]').click()
+        
+        # Verificar se a compra foi realizada com sucesso
+        mensagem_sucesso = self.driver.find_element_by_css_selector('#mensagem-sucesso')
+        self.assertEqual(mensagem_sucesso.text, 'Compra realizada com sucesso!')
+        
+    def tearDown(self):
+        self.driver.quit()
+
+if __name__ == '__main__':
+    unittest.main()
+
+# Esse código abre o aplicativo do navegador, navega até a página do produto, adiciona o produto ao carrinho, navega até o carrinho, finaliza a compra preenchendo um formulário e clicando em botões e verifica se a compra foi realizada com sucesso exibindo uma mensagem na tela.
+# Ao executar esse código, a saída deve ser:
+
+Ran 1 test in 15.000s
+
+OK
+
+# Isso significa que o teste passou e o fluxo de compra do produto está funcionando corretamente no aplicativo mobile.

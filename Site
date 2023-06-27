@@ -1,0 +1,53 @@
+# Para criar a automação de testes de pelo menos um fluxo de web (site), utilizei a biblioteca Selenium WebDriver do Python, que permite automatizar interações com navegadores web.
+# Supondo que seja o fluxo de compra de um produto em um site de comércio eletrônico. O fluxo consiste em navegar até a página do produto, adicionar o produto ao carrinho, navegar até o carrinho e finalizar a compra.
+# Para automatizar esse fluxo,utilizado um teste de unidade utilizando a biblioteca unittest do Python e a biblioteca Selenium WebDriver para controlar o navegador.
+
+import unittest
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+
+class TestWeb(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Chrome()  # altere para o driver do navegador que você quer usar
+        self.driver.maximize_window()
+    
+    def test_compra_produto(self):
+        self.driver.get('https://exemplo.com/produto/123')  # altere para a URL do produto que você quer testar
+        
+        # Adicionar o produto ao carrinho
+        self.driver.find_element_by_css_selector('#add-to-cart').click()
+        
+        # Navegar até o carrinho
+        self.driver.find_element_by_css_selector('#cart-button').click()
+        
+        # Finalizar a compra
+        self.driver.find_element_by_css_selector('#checkout-button').click()
+        WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '#checkout-form')))
+        self.driver.find_element_by_css_selector('#checkout-form input[name="nome"]').send_keys('Fulano de Tal')
+        self.driver.find_element_by_css_selector('#checkout-form input[name="email"]').send_keys('fulano@example.com')
+        self.driver.find_element_by_css_selector('#checkout-form input[name="endereco"]').send_keys('Rua Exemplo, 123')
+        self.driver.find_element_by_css_selector('#checkout-form input[name="cep"]').send_keys('12345-678')
+        self.driver.find_element_by_css_selector('#checkout-form input[name="pagamento"]').click()
+        self.driver.find_element_by_css_selector('#checkout-form input[type="submit"]').click()
+        
+        # Verificar se a compra foi realizada com sucesso
+        mensagem_sucesso = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '#mensagem-sucesso')))
+        self.assertEqual(mensagem_sucesso.text, 'Compra realizada com sucesso!')
+        
+    def tearDown(self):
+        self.driver.quit()
+
+if __name__ == '__main__':
+    unittest.main()
+
+# Esse código abre o navegador, navega até a página do produto, adiciona o produto ao carrinho, navega até o carrinho, finaliza a compra preenchendo um formulário e clicando em botões e verifica se a compra foi realizada com sucesso exibindo uma mensagem na tela.
+
+Ao executar esse código, a saída deve ser:
+Ran 1 test in 10.000s
+
+OK
+
+# indicando que o teste passou e e o fluxo esta correto.

@@ -1,0 +1,59 @@
+# Para a automação de testes de pelo menos um método de uma API da funcionalidade cálculo de média aritmética, utilizado a biblioteca requests do Python para fazer chamadas HTTP para a API e verificar se os resultados estão corretos.
+# Supondo que a API expõe um endpoint calcular-media que recebe uma lista de números no formato JSON e retorna a média aritmética desses números no formato JSON. A chamada para essa API seria algo como:
+
+POST /calcular-media HTTP/1.1
+Content-Type: application/json
+
+{
+    "numeros": [1, 2, 3, 4, 5]
+}
+
+#Sendo a resposta:
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "media": 3
+}
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "media": 3
+}
+
+# Para testar essa API, podemos criar um teste de unidade utilizando a biblioteca unittest do Python e a biblioteca requests para fazer as chamadas HTTP para a API. 
+# O teste deve verificar se a API retorna a média aritmética correta para diferentes listas de números.
+
+import unittest
+import requests
+import json
+
+class TestAPI(unittest.TestCase):
+    base_url = 'http://localhost:8000'  # altere para a URL da sua API
+
+    def test_media_vazia(self):
+        response = requests.post(self.base_url + '/calcular-media', json={'numeros': []})
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(json.loads(response.content)['media'])
+
+    def test_media_um_elemento(self):
+        response = requests.post(self.base_url + '/calcular-media', json={'numeros': [5]})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content)['media'], 5)
+
+    def test_media_lista(self):
+        response = requests.post(self.base_url + '/calcular-media', json={'numeros': [1, 2, 3, 4, 5]})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content)['media'], 3)
+
+if __name__ == '__main__':
+    unittest.main()
+
+# Esse código faz três chamadas HTTP para a API para testar se ela retorna a média aritmética correta para diferentes listas de números. O primeiro teste test_media_vazia testa se a API retorna None para uma lista vazia. O segundo teste test_media_um_elemento testa se a API retorna o único número da lista quando a lista tem apenas um elemento. O terceiro teste test_media_lista testa se a API retorna a média aritmética correta para uma lista com vários números.
+# Para sucesso a saida deve ser igual a: 
+
+Ran 3 tests in 0.000s
+
+OK
